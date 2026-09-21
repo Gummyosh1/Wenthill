@@ -47,6 +47,9 @@ TagManager:
   - name: Background
     uniqueID: 3523675591
     locked: 0
+  - name: Tower
+    uniqueID: 2454047049
+    locked: 0
   - name: Ground
     uniqueID: 1235108331
     locked: 0
