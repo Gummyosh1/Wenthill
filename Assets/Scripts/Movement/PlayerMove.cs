@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class PlayerMove : MonoBehaviour
     private float speed = 8f;
     private float jumpPower = 16f;
     private bool isFacingRight = true;
+    [NonSerialized] public bool isMoving = false;
 
 
     public void Update()
@@ -66,6 +68,14 @@ public class PlayerMove : MonoBehaviour
 
         //MOVEMENT PHYSICS
         rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
+        if (horizontal != 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
     }
 
     private bool IsGrounded()
