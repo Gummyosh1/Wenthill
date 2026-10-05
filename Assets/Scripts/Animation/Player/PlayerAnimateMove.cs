@@ -6,6 +6,7 @@ public class PlayerAnimateMove : MonoBehaviour
     public PlayerMove playerMove;
     public Sprite[] sprites;
     public Sprite idle;
+    public Sprite slide;
     public SpriteRenderer spriteRenderer;
     private float timer = 0.1f;
     private int index = 1;
@@ -15,15 +16,26 @@ public class PlayerAnimateMove : MonoBehaviour
 
     public void Update()
     {
-        if (walkAnimationRoutine == null && playerMove.isMoving)
+        if (walkAnimationRoutine == null && playerMove.isMoving && !playerMove.isSliding)
         {
             walkAnimationRoutine = StartCoroutine(walkAnimation());
         }
-        else if (walkAnimationRoutine != null && !playerMove.isMoving)
+        else if (walkAnimationRoutine != null && !playerMove.isMoving && !playerMove.isSliding)
         {
             StopCoroutine(walkAnimationRoutine);
             walkAnimationRoutine = null;
             spriteRenderer.sprite = idle;
+        }
+
+        if (playerMove.isSliding)
+        {
+            if (walkAnimationRoutine != null)
+            {
+                StopCoroutine(walkAnimationRoutine);
+                walkAnimationRoutine = null;
+                spriteRenderer.sprite = slide;
+            }
+
         }
     }
 

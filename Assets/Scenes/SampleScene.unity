@@ -1054,6 +1054,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.061538696}
   m_EdgeRadius: 0
+--- !u!1 &1249481752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249481753}
+  m_Layer: 0
+  m_Name: SlideCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249481753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249481752}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.252, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1958634370}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1253919352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1312,6 +1343,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1253919353}
+  - {fileID: 1249481753}
   - {fileID: 1012767565}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1329,6 +1361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   rb: {fileID: 1958634367}
   groundCheck: {fileID: 1253919353}
+  slideCheck: {fileID: 1249481753}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1503,6 +1536,7 @@ MonoBehaviour:
   - {fileID: 2816371895773033202, guid: 121c248c48dc947929dcd7143eb01074, type: 3}
   - {fileID: -3648665352121964772, guid: 1c4c02b38ed374d4b8d0c3a27d6e007e, type: 3}
   idle: {fileID: 4438370541146361172, guid: b28d8730abf834ea18fec1f97a0789f7, type: 3}
+  slide: {fileID: 4857335772653305134, guid: 910b0d2b2b0e54fedb0d4c6a431f32b8, type: 3}
   spriteRenderer: {fileID: 1958634369}
 --- !u!1 &1986522065
 GameObject:
