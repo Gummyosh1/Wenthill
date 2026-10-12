@@ -7,6 +7,7 @@ TagManager:
   - OneWayPlatform
   - BottomGround
   - AirGround
+  - Tower
   layers:
   - Default
   - TransparentFX
