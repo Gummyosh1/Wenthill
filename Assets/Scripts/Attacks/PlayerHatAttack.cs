@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 public class PlayerHatAttack : MonoBehaviour
 {
     private PlayerMove playerMove;
     public GameObject hatPrefab;
+    [NonSerialized] public GameObject hatInstance;
     private Transform throwPosition;
 
     public void Start()
@@ -14,8 +16,10 @@ public class PlayerHatAttack : MonoBehaviour
 
     public void attack()
     {
-        GameObject hat = Instantiate(hatPrefab, throwPosition.position, Quaternion.identity);
-
-        hat.GetComponent<HatProjectile>().right = playerMove.getIsFacingRight();
+        if (hatInstance == null)
+        {
+            hatInstance = Instantiate(hatPrefab, throwPosition.position, Quaternion.identity);
+            hatInstance.GetComponent<HatProjectile>().right = playerMove.getIsFacingRight();
+        }
     }
 }
