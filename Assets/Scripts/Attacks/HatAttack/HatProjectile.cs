@@ -7,18 +7,20 @@ public class HatProjectile : MonoBehaviour
 {
     private PlayerHatAttack playerHatAttack;
     [NonSerialized] public bool right = false;
+    [NonSerialized] public int damage = 5;
     private float speed = 4f;
     private bool moving = true;
     private bool bufferDone = false;
     private float spawnBufferTimer = 1f;
     private float timeout = 5f;
     private Coroutine hatAnimation = null;
+    private Coroutine spawnBufferRoutine = null;
 
     public void Start()
     {
         hatAnimation = StartCoroutine(moveHat());
         playerHatAttack = GameObject.Find("Player").GetComponent<PlayerHatAttack>();
-        StartCoroutine(spawnBuffer());
+        spawnBufferRoutine = StartCoroutine(spawnBuffer());
         StartCoroutine(hatTimeout());
     }
 
@@ -28,8 +30,7 @@ public class HatProjectile : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             moving = false;
-            Debug.Log("Enemy Hit");
-            //IMPLEMENT ENEMY HIT LOGIC HERE FOR THE ENEMY
+            other.GetComponent<EnemyHealth>().TakeDamage(damage);
         }
         if (other.gameObject.name == "Player")
         {
@@ -60,6 +61,9 @@ public class HatProjectile : MonoBehaviour
         }
         yield return new WaitForSeconds(0.3f);
         dealDamage();
+        bufferDone = true;
+        StopCoroutine(spawnBufferRoutine);
+        spawnBufferRoutine = null;
         hatAnimation = null;
     }
 
