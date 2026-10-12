@@ -8,6 +8,7 @@ TagManager:
   - BottomGround
   - AirGround
   - Tower
+  - Enemy
   layers:
   - Default
   - TransparentFX

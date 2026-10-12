@@ -133,6 +133,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    public bool getIsFacingRight()
+    {
+        return isFacingRight;
+    }
+
     private IEnumerator Slide()
     {
         isSliding = true;
