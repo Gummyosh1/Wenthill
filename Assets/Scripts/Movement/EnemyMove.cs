@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
@@ -9,10 +10,25 @@ public class EnemyMove : MonoBehaviour
     private float triggerDistance = 0;
     private float towerDistance = 0;
     private float triggerRange = 4f;
+    private bool atPlayer = false;
 
+
+    public void Start()
+    {
+        target = findTower();
+        triggerTarget = GameObject.Find("Player").transform;
+    }
 
     void Update()
     {
+        if (target == null)
+        {
+            target = findTower();
+            if (target == null)
+            {
+                return;
+            }
+        }
         float previousX = transform.position.x;
 
         triggerDistance = Vector2.Distance(transform.position, triggerTarget.position);
@@ -25,15 +41,20 @@ public class EnemyMove : MonoBehaviour
 
         if (triggerDistance < triggerRange)
         {
+            atPlayer = true;
             transform.position = Vector2.MoveTowards(transform.position, triggerTarget.position, speed * Time.deltaTime);
         }
         else
         {
+            if (atPlayer == true)
+            {
+                target = findTower();
+                atPlayer = false;
+            }
             if (towerDistance > 0.1)
             {
                 transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);    
             }
-            
         }
 
         float movementX = transform.position.x - previousX;
@@ -43,5 +64,27 @@ public class EnemyMove : MonoBehaviour
             scale.x = Mathf.Abs(scale.x) * (movementX > 0 ? 1 : -1);
             transform.localScale = scale;
         }
+    }
+
+
+    public Transform findTower()
+    {
+        float distance = int.MaxValue;
+        GameObject towerReturn = null;
+
+        foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
+        {
+            if (Vector3.Distance(transform.position, tower.transform.position) < distance)
+            {
+                towerReturn = tower;
+                distance = Vector3.Distance(transform.position, tower.transform.position);
+            }
+        }
+        if (towerReturn != null)
+        {
+            Debug.Log("Found tower!");
+            return towerReturn.transform;
+        }
+        return null;
     }
 }
