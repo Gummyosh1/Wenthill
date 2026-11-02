@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1585994015200176746}
   - component: {fileID: 4050878648673696481}
   - component: {fileID: 8190126413250156260}
+  - component: {fileID: 2603907338011231440}
   m_Layer: 0
   m_Name: Wasp
   m_TagString: Enemy
@@ -231,3 +232,16 @@ MonoBehaviour:
   - {fileID: -2666242162509528437, guid: 996422754ac2042bfa5832fa53ef52b8, type: 3}
   - {fileID: -5456981662653712345, guid: 4be0dc4eee51b4794b6200647afb3b59, type: 3}
   spriteRenderer: {fileID: 6407872947224211005}
+--- !u!114 &2603907338011231440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937845312754793787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed885495a29048fa820df305a370860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
+  damageManager: {fileID: 0}
