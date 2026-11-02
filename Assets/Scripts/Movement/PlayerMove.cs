@@ -27,6 +27,13 @@ public class PlayerMove : MonoBehaviour
     private Coroutine slidingCoroutine = null;
 
 
+    //RUNNING UP HILLS FIX
+    private float groundProbeDistance = 0.35f;
+    private float groundStickSpeed = 2f;
+    private float maxSlopeAngle = 60f;
+    private bool isJumping;
+
+
     //MOVEMENT
     private float horizontal;
     private float speed = 8f;
@@ -49,6 +56,7 @@ public class PlayerMove : MonoBehaviour
         //JUMP
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            isJumping = true;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
         }
 
@@ -77,6 +85,11 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
+        
+        if (isJumping && rb.linearVelocity.y <= 0f && IsGrounded())
+        {
+            isJumping = false;
+        }
 
 
         if (canSlide && Input.GetKey(KeyCode.Tab))
@@ -87,16 +100,44 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (isSliding)
+        float moveSpeed = isSliding ? slideSpeed : speed;
+
+        // Start slightly above the feet so the ray begins outside the ground.
+        Vector2 probeOrigin =
+            (Vector2)groundCheck.position + Vector2.up * 0.1f;
+
+        RaycastHit2D groundHit = Physics2D.Raycast(
+            probeOrigin,
+            Vector2.down,
+            groundProbeDistance,
+            groundLayer
+        );
+
+        bool onWalkableGround =
+            groundHit.collider != null &&
+            Vector2.Angle(groundHit.normal, Vector2.up) <= maxSlopeAngle;
+
+        if (onWalkableGround && !isJumping && !isSliding)
         {
-            rb.linearVelocity = new Vector2(horizontal * slideSpeed, rb.linearVelocity.y);
+            // A direction parallel to the ground, pointing right.
+            Vector2 groundDirection = new Vector2(
+                groundHit.normal.y,
+                -groundHit.normal.x
+            );
+
+            rb.linearVelocity =
+                groundDirection * horizontal * moveSpeed
+                - groundHit.normal * groundStickSpeed;
         }
         else
         {
-            //MOVEMENT PHYSICS
-            rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
+            // Preserve vertical velocity during jumps, falls, and slides.
+            rb.linearVelocity = new Vector2(
+                horizontal * moveSpeed,
+                rb.linearVelocity.y
+            );
         }
-        
+
         isMoving = IsMoving();
     }
 
