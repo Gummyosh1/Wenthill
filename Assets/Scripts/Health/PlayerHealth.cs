@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+    private PlayerMove playerMove;
     [NonSerialized] public int currentHealth;
     [NonSerialized] public int maxHealth = 7;
     [NonSerialized] public bool isAlive = true;
@@ -17,8 +18,19 @@ public class PlayerHealth : MonoBehaviour
     public Sprite[] heartSprites;
     public Sprite emptyHeartSprite;
     private Coroutine[] heartAnimationRoutines = new Coroutine[10];
+    private Vector2 attackerPosition;
 
     private float heartAnimationRate = .75f;
+
+    [Min(0f)] private float postKnockbackIFrames = 0.25f;
+    private float hitInvulnerableUntil;
+
+    //LOW HEALTH
+    [SerializeField] private Image lowHealthVignette;
+    [SerializeField] private CameraFollow cameraFollow;
+    private int lowHealthThreshold = 2;
+    private bool wasLowHealth;
+
 
     public void Start()
     {
@@ -28,11 +40,27 @@ public class PlayerHealth : MonoBehaviour
             hearts[i].sprite = heartSprites[0];
             heartAnimationRoutines[i] = StartCoroutine(heartAnimation(hearts[i]));
         }
+        playerMove = GetComponent<PlayerMove>();
     }
 
-    public void TakeDamage(int damage)
+    private void LateUpdate()
     {
-        if (isInvincible)
+        bool isLowHealth = isAlive && currentHealth <= lowHealthThreshold;
+
+        Color color = lowHealthVignette.color;
+        float targetAlpha = isLowHealth ? 0.55f : 0f;
+        color.a = Mathf.MoveTowards(color.a, targetAlpha, 3f * Time.deltaTime);
+        lowHealthVignette.color = color;
+
+        if (isLowHealth && !wasLowHealth)
+            cameraFollow.PlayLowHealthShake();
+
+        wasLowHealth = isLowHealth;
+    }
+
+    public void TakeDamage(int damage, Vector2 attackerPosition, float knockbackSpeed, float knockbackLift, float knockbackDuration)
+    {
+        if (isInvincible || Time.time < hitInvulnerableUntil)
         {
             return;
         }
@@ -63,6 +91,11 @@ public class PlayerHealth : MonoBehaviour
             }
             heartAnimationRoutines[i] = null;
         }
+
+        // The attack supplies attackerPosition. Pass this direction to PlayerMove.
+        Vector2 hitDirection = (Vector2)transform.position - attackerPosition;
+        hitInvulnerableUntil = Time.time + knockbackDuration + postKnockbackIFrames;
+        playerMove.ApplyKnockback(hitDirection, knockbackDuration, knockbackSpeed, knockbackLift);
     }
 
     public IEnumerator heartAnimation(Image heart)

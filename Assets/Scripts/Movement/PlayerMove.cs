@@ -41,17 +41,20 @@ public class PlayerMove : MonoBehaviour
     private bool isFacingRight = true;
     [NonSerialized] public bool isMoving = false;
 
+    //KNOCKBACK
+    public bool IsKnockedBack => Time.time < knockbackUntil;
+    private float knockbackUntil;
+
 
     public void Update()
     {
-        if (isDashing)
+        if (isDashing || IsKnockedBack)
         {
             return;
         }
 
         //MOVEMENT INPUT
         horizontal = Input.GetAxisRaw("Horizontal");
-
 
         //JUMP
         if (Input.GetButtonDown("Jump") && IsGrounded())
@@ -81,7 +84,7 @@ public class PlayerMove : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (isDashing)
+        if (isDashing || IsKnockedBack)
         {
             return;
         }
@@ -177,6 +180,18 @@ public class PlayerMove : MonoBehaviour
     public bool getIsFacingRight()
     {
         return isFacingRight;
+    }
+
+    public void ApplyKnockback(Vector2 hitDirection, float knockbackDuration, float knockbackSpeed, float knockbackLift)
+    {
+        float horizontalDirection = Mathf.Sign(hitDirection.x);
+
+        knockbackUntil = Time.time + knockbackDuration;
+        isMoving = false;
+        rb.linearVelocity = new Vector2(
+            horizontalDirection * knockbackSpeed,
+            knockbackLift
+        );
     }
 
     private IEnumerator Slide()

@@ -14,9 +14,9 @@ public class DamageManager : MonoBehaviour
         return enemyList.Count - 1;
     }
     
-    public void enemyDealDamage(int damage, float knockback = 0)
+    public void enemyDealDamage(int damage, Vector2 attackerPosition, float knockbackSpeed, float knockbackLift, float knockbackDuration)
     {
-        playerHealth.TakeDamage(damage);
+        playerHealth.TakeDamage(damage, attackerPosition, knockbackSpeed, knockbackLift, knockbackDuration);
     }
 
     public void playerDealDamage(float damage, float knockback)

@@ -26,6 +26,12 @@ public class CameraFollow : MonoBehaviour
     private Coroutine PTFHolder = null;
 
 
+    //LOW HEALTH CAMERA SHAKE
+    private const float ShakeDuration = 0.2f;
+    private float shakeEndsAt;
+    private Vector3 shakeOffset;
+
+
 
     
 
@@ -42,7 +48,7 @@ public class CameraFollow : MonoBehaviour
             PTFHolder = StartCoroutine(platformToFloorRoutine());
         }
         Vector3 targetPosition = cameraTarget.position + cameraOffset;
-        Vector3 nextPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+        Vector3 nextPosition = Vector3.SmoothDamp(transform.position - shakeOffset, targetPosition, ref velocity, smoothTime);
         
         float maxCameraY = cameraTarget.position.y
             + camera.orthographicSize * (1f - 2f * bottomMargin);
@@ -53,7 +59,13 @@ public class CameraFollow : MonoBehaviour
             velocity.y = 0f;
         }
 
-        transform.position = nextPosition;
+        float remaining = Mathf.Max(0f, shakeEndsAt - Time.time);
+        float fade = remaining / ShakeDuration;
+        float elapsed = ShakeDuration - remaining;
+        shakeOffset = Vector3.right * (Mathf.Sin(elapsed * 80f) * 0.08f * fade);
+
+
+        transform.position = nextPosition + shakeOffset;
     }
 
     public IEnumerator floorToPlatformRoutine()
@@ -67,6 +79,11 @@ public class CameraFollow : MonoBehaviour
         cameraOffset = new Vector3(cameraOffset.x, platformOffset.y, cameraOffset.z);
         FTPHolder = null;
         
+    }
+
+    public void PlayLowHealthShake()
+    {
+        shakeEndsAt = Time.time + ShakeDuration;
     }
 
     public IEnumerator platformToFloorRoutine()

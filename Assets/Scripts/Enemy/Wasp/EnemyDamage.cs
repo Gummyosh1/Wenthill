@@ -4,7 +4,9 @@ public class EnemyDamage : MonoBehaviour
 {
     private DamageManager damageManager;
     private int damage = 1;
-    private float knockback = 1.5f;
+    private float knockbackSpeed = 8f;
+    private float knockbackLift = 5f;
+    private float knockbackDuration = 0.25f;
 
     public void Start()
     {
@@ -17,7 +19,7 @@ public class EnemyDamage : MonoBehaviour
 
         if (collision.gameObject.name == "Player")
         {
-            damageManager.enemyDealDamage(damage, knockback);
+            damageManager.enemyDealDamage(damage, transform.position, knockbackSpeed, knockbackLift, knockbackDuration);
         }
     }
 }
