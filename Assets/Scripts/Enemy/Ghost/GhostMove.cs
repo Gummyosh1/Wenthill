@@ -74,6 +74,10 @@ public class GhostMove : MonoBehaviour
         }
     }
 
+    public void DeathSlow()
+    {
+        speed *= 0.2f;
+    }
 
     public Transform findTower()
     {

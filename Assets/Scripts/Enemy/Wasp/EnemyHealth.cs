@@ -6,25 +6,63 @@ public class EnemyHealth : MonoBehaviour
     private int health = 10;
     private SpriteRenderer spriteRenderer;
     private Coroutine takeDamageAnimationInstance;
+    private EnemyMove enemyMove;
+    private GhostMove ghostMove;
+
+    private SpriteRenderer explosionRenderer;
+    public Sprite[] explosionList;
+    private float explosionFrameTime = 0.06f;
+    private bool isDying;
+
 
     public void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (gameObject.name == "Wasp")
+        {
+            enemyMove = GetComponent<EnemyMove>();
+        }
+        else
+        {
+            ghostMove = GetComponent<GhostMove>();
+        }
+
+        Transform explosion = transform.Find("BlowUp");
+
+        if (explosion != null)
+            explosionRenderer = explosion.GetComponent<SpriteRenderer>();
     }
 
     public void TakeDamage(int damage)
     {
-        takeDamageAnimationInstance = StartCoroutine(takeDamageAnimation());
+        if (isDying)
+        {
+            return;
+        }
+
         health -= damage;
+        
         if (health <= 0)
         {
             Die();
+            return;
         }
+
+        takeDamageAnimationInstance = StartCoroutine(takeDamageAnimation());
     }
 
-    private void Die()
+    public void Die()
     {
-        Destroy(gameObject);
+        isDying = true;
+        if (enemyMove != null)
+        {
+            enemyMove.DeathSlow();
+        }
+        else
+        {
+            ghostMove.DeathSlow();
+        }
+        StartCoroutine(PlayExplosion());
     }
 
     public IEnumerator takeDamageAnimation()
@@ -50,5 +88,27 @@ public class EnemyHealth : MonoBehaviour
         }
 
         spriteRenderer.color = startColor;
+    }
+
+
+    private IEnumerator PlayExplosion()
+    {
+        explosionRenderer.gameObject.SetActive(true);
+
+        WaitForSeconds frameDelay = new WaitForSeconds(explosionFrameTime);
+        int index = 0;
+        foreach (Sprite frame in explosionList)
+        {
+            explosionRenderer.sprite = frame;
+            index ++;
+
+            if (index == 5)
+            {
+                spriteRenderer.enabled = false;
+            }
+            yield return frameDelay;
+        }
+
+        Destroy(gameObject);
     }
 }

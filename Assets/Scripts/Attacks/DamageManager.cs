@@ -7,6 +7,7 @@ public class DamageManager : MonoBehaviour
     public List<GameObject> enemyList = new List<GameObject>();
 
     public PlayerHealth playerHealth;
+    public TowerHealth towerHealth;
     
     public int addEnemy(GameObject enemyObject)
     {
@@ -22,5 +23,10 @@ public class DamageManager : MonoBehaviour
     public void playerDealDamage(float damage, float knockback)
     {
         
+    }
+
+    public void enemyDealTowerDamage(int damage)
+    {
+        towerHealth.TakeDamage(damage);
     }
 }

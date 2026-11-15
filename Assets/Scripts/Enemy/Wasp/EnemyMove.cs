@@ -66,6 +66,11 @@ public class EnemyMove : MonoBehaviour
         }
     }
 
+    public void DeathSlow()
+    {
+        speed *= 0.2f;
+    }
+
 
     public Transform findTower()
     {
