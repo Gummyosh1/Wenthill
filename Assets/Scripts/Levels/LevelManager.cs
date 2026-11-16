@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class LevelManager : MonoBehaviour
     public GameObject waspPrefab;
     public GameObject ghostPrefab;
 
-    private float spawnRate = 2f;
+    public Sprite[] levelSprites;
+    public Image levelHolder;
+    public Sprite gameOverSprite;
+
+    private float spawnRate = 0.1f;
 
     public Coroutine gameplayCoroutine = null;
 
@@ -41,10 +46,11 @@ public class LevelManager : MonoBehaviour
     {
         while (true)
         {
-            if (currentLevel > 1)
-            {
-                yield return new WaitForSeconds(3f);
-            }
+            levelHolder.sprite = levelSprites[currentLevel - 1];
+            levelHolder.gameObject.SetActive(true);
+            yield return new WaitForSeconds(3f);
+            levelHolder.gameObject.SetActive(false);
+
             while (enemySpawnCounts[currentLevel] > 0)
             {
                 if (rightSpawn)
@@ -57,7 +63,7 @@ public class LevelManager : MonoBehaviour
                 }
                 enemySpawnCounts[currentLevel]--;
                 rightSpawn = !rightSpawn;
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(spawnRate);
             }
             while (enemyHolder.childCount > 0)
             {
@@ -65,6 +71,20 @@ public class LevelManager : MonoBehaviour
             }
             nextLevel(); 
         }
+    }
+
+    public void endGame()
+    {
+        levelHolder.sprite = gameOverSprite;
+        levelHolder.gameObject.SetActive(true);
+        int totalEnemies = enemyHolder.childCount;
+        StopCoroutine(gameplayCoroutine);
+
+        for (int i = 0; i < totalEnemies; i++)
+        {
+            Destroy(enemyHolder.GetChild(i).gameObject);
+        }
+
     }
 
     public void nextLevel()

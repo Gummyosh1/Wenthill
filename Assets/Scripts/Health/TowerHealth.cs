@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class TowerHealth : MonoBehaviour
 {
     [NonSerialized] public int towerHealth;
+    public LevelManager levelManager;
     private int maxTowerHealth = 7;
 
     public SpriteRenderer towerMask;
@@ -60,6 +61,11 @@ public class TowerHealth : MonoBehaviour
 
         damageCoroutine = StartCoroutine(flashRed());
         renderHealth();
+
+        if (towerHealth <= 0)
+        {
+            levelManager.endGame();
+        }
     }
 
     private IEnumerator flashRed()

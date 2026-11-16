@@ -30,6 +30,10 @@ public class EnemyDamage : MonoBehaviour
     {
         if (other.gameObject.name == "Mask")
         {
+            if (enemyHealth.IsDying)
+            {
+                return;
+            }
             Debug.Log("Wasp entered Mask trigger");
             damageManager.enemyDealTowerDamage(towerDamage);
             enemyHealth.Die();

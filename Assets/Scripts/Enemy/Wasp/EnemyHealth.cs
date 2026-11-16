@@ -14,6 +14,8 @@ public class EnemyHealth : MonoBehaviour
     private float explosionFrameTime = 0.06f;
     private bool isDying;
 
+    public bool IsDying => isDying;
+
 
     public void Start()
     {

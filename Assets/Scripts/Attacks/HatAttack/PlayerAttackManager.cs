@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerAttackManager : MonoBehaviour
 {
     private PlayerHatAttack playerHatAttack;
+    public GameObject shop;
 
     public void Start()
     {
@@ -11,7 +12,7 @@ public class PlayerAttackManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !shop.activeSelf)
         {
             playerHatAttack.attack();
         }
