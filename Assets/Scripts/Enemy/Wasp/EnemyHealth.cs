@@ -18,7 +18,7 @@ public class EnemyHealth : MonoBehaviour
     public void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (gameObject.name == "Wasp")
+        if (gameObject.name.Contains("Wasp"))
         {
             enemyMove = GetComponent<EnemyMove>();
         }

@@ -74,6 +74,10 @@ public class TowerHealth : MonoBehaviour
     {
         for (int i = towerHealth; i < maxTowerHealth; i++)
         {
+            if (i < 0)
+            {
+                return;
+            }
             hearts[i].sprite = deadHeart;
             if (heartAnimationRoutines[i] != null)
             {
